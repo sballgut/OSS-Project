@@ -1,10 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
 #include <conio.h>
 #include <time.h>
-
-#define _CRT_SECURE_NO_WARNINGS
 
 #define MAP_SIZE_W 10
 #define MAP_SIZE_H 20
@@ -50,7 +49,7 @@ void gotoxy(int x, int y) {
 
 //get keyboard input.
 int getKeyDown() {
-    if (kbhit()) return getch();
+    if (_kbhit()) return _getch();
     else return -1;
 }
 
@@ -650,7 +649,7 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
             goSpace(map, blockShape, &curLoc);
         }
         if (key == 224 || key == 0) {
-            key = getch();
+            key = _getch();
             if (key == UP) {
                 rotate(map, blockShape, &curLoc);
             }
