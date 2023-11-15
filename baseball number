@@ -60,28 +60,40 @@ void generateRandomNumber(int *number, int digitCount) {
     }
 }
 
-// 사용자로부터 숫자 입력 받기
 void getUserInput(int *guess, int digitCount) {
     printf("%d자리 숫자를 입력하세요: ", digitCount);
+
     for (int i = 0; i < digitCount; ++i) {
         scanf("%1d", &guess[i]);
     }
+
+    // 입력 버퍼 비우기
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 // 입력한 숫자와 정답을 비교하여 스트라이크와 볼 계산
-void checkGuess(int *randomNumber, int *userGuess, int digitCount, int *strikes, int *balls) {
+void checkGuess(int *targetNumber, int *userGuess, int digitCount, int *strikes, int *balls) {
     *strikes = 0;
     *balls = 0;
 
+    // 배열을 통해 중복된 숫자를 처리하기 위한 배열 선언
+    int targetCount[10] = {0};
+    int guessCount[10] = {0};
+
     for (int i = 0; i < digitCount; ++i) {
-        for (int j = 0; j < digitCount; ++j) {
-            if (userGuess[i] == randomNumber[j]) {
-                if (i == j) {
-                    (*strikes)++;
-                } else {
-                    (*balls)++;
-                }
-            }
+        if (userGuess[i] == targetNumber[i]) {
+            (*strikes)++;
+        } else {
+            // 중복된 숫자를 처리
+            targetCount[targetNumber[i]]++;
+            guessCount[userGuess[i]]++;
         }
     }
+
+    
+    for (int i = 0; i < 10; ++i) {
+        *balls += (targetCount[i] < guessCount[i]) ? targetCount[i] : guessCount[i];
+    }
 }
+
