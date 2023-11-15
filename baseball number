@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// 함수 선언
+void generateRandomNumber(int *number, int digitCount);
+void getUserInput(int *guess, int digitCount);
+void checkGuess(int *randomNumber, int *userGuess, int digitCount, int *strikes, int *balls);
+
+int main() {
+    int difficulty;
+    int strikes, balls;
+
+    printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
+    scanf("%d", &difficulty);
+
+    int digitCount;
+    switch (difficulty) {
+        case 1:
+            digitCount = 3;
+            break;
+        case 2:
+            digitCount = 4;
+            break;
+        case 3:
+            digitCount = 5;
+            break;
+        default:
+            printf("올바른 난이도를 선택하세요.\n");
+            return 1;
+    }
+
+    srand(time(NULL)); 
+
+    int randomNumber[digitCount];
+    int userGuess[digitCount];
+
+    generateRandomNumber(randomNumber, digitCount);
+
+    printf("=== 숫자야구 게임 시작 (난이도: %d) ===\n", digitCount);
+
+    do {
+        getUserInput(userGuess, digitCount);
+        checkGuess(randomNumber, userGuess, digitCount, &strikes, &balls);
+
+        printf("스트라이크: %d, 볼: %d\n", strikes, balls);
+
+    } while (strikes != digitCount);
+
+    printf("축하합니다! 정답을 맞추셨습니다.\n");
+
+    return 0;
+}
+
+// 무작위로 숫자 생성
+void generateRandomNumber(int *number, int digitCount) {
+    for (int i = 0; i < digitCount; ++i) {
+        number[i] = rand() % 10;
+    }
+}
+
+// 사용자로부터 숫자 입력 받기
+void getUserInput(int *guess, int digitCount) {
+    printf("%d자리 숫자를 입력하세요: ", digitCount);
+    for (int i = 0; i < digitCount; ++i) {
+        scanf("%1d", &guess[i]);
+    }
+}
+
+// 입력한 숫자와 정답을 비교하여 스트라이크와 볼 계산
+void checkGuess(int *randomNumber, int *userGuess, int digitCount, int *strikes, int *balls) {
+    *strikes = 0;
+    *balls = 0;
+
+    for (int i = 0; i < digitCount; ++i) {
+        for (int j = 0; j < digitCount; ++j) {
+            if (userGuess[i] == randomNumber[j]) {
+                if (i == j) {
+                    (*strikes)++;
+                } else {
+                    (*balls)++;
+                }
+            }
+        }
+    }
+}
