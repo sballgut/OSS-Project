@@ -61,15 +61,38 @@ void generateRandomNumber(int *number, int digitCount) {
 }
 
 void getUserInput(int *guess, int digitCount) {
-    printf("%d자리 숫자를 입력하세요: ", digitCount);
+    int validInput;
 
-    for (int i = 0; i < digitCount; ++i) {
-        scanf("%1d", &guess[i]);
-    }
+    do {
+        validInput = 1; // 입력이 유효하다고 가정하고 시작
 
-    // 입력 버퍼 비우기
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+        printf("%d자리 숫자를 입력하세요: ", digitCount);
+
+        for (int i = 0; i < digitCount; ++i) {
+            if (scanf("%1d", &guess[i]) != 1) {
+                printf("올바른 숫자를 입력하세요.\n");
+
+                // 입력 버퍼 비우기
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+
+                validInput = 0; // 입력이 유효하지 않음
+                break;
+            }
+        }
+
+        // 입력이 숫자가 아닌 문자를 포함하는지 확인
+        if (validInput) {
+            for (int i = 0; i < digitCount; ++i) {
+                if (guess[i] < 0 || guess[i] > 9) {
+                    printf("올바른 숫자를 입력하세요.\n");
+                    validInput = 0; // 입력이 유효하지 않음
+                    break;
+                }
+            }
+        }
+
+    } while (!validInput);
 }
 
 // 입력한 숫자와 정답을 비교하여 스트라이크와 볼 계산
