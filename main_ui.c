@@ -11,6 +11,9 @@ void SetConsole();
 void textcolor(int color_number);
 int getKeyDown();
 void SelectGame();
+void StartNumberBaseball();
+void StartNPuzzle();
+void StartTetris();
 
 int main() {
 	int keyInput = getKeyDown();
