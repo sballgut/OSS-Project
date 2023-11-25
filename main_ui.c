@@ -101,26 +101,26 @@ void SelectGame() {
 	gotoxy(x, 6);
 	printf(">");
 	while (1) {
-		if (GetAsyncKeyState(VK_LEFT)) {
-			if (x <= 5 && GetAsyncKeyState(VK_LEFT)) {
-				gotoxy(5, 6);
-				printf(" ");
-				gotoxy(5, 6);
-				printf(">");
-			}
+		if (x <= 5 && GetAsyncKeyState(VK_LEFT)) {
+			gotoxy(5, 6);
+			printf(" ");
+			gotoxy(5, 6);
+			printf(">");
+		}
+		else if (GetAsyncKeyState(VK_LEFT)) {
 			gotoxy(x, 6);
 			printf(" ");
 			x -= 12;
 			gotoxy(x, 6);
 			printf(">");
 		}
+		if (x >= 29 && GetAsyncKeyState(VK_RIGHT)) {
+			gotoxy(29, 6);
+			printf(" ");
+			gotoxy(29, 6);
+			printf(">");
+		}
 		else if (GetAsyncKeyState(VK_RIGHT)) {
-			if (x >= 29 && GetAsyncKeyState(VK_RIGHT)) {
-				gotoxy(29, 6);
-				printf(" ");
-				gotoxy(29, 6);
-				printf(">");
-			}
 			gotoxy(x, 6);
 			printf(" ");
 			x += 12;
