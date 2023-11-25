@@ -127,15 +127,88 @@ void SelectGame() {
 			gotoxy(x, 6);
 			printf(">");
 		}
-		if (x == 5) {
-
-		}
-		else if (x == 17) {
-
-		}
-		else if (x == 29) {
-
-		}
 		Sleep(200);
+		if (x == 5 && GetAsyncKeyState(VK_RETURN)) {
+			StartNumberBaseball();
+		}
+		else if (x == 17 && GetAsyncKeyState(VK_RETURN)) {
+			StartNPuzzle();
+		}
+		else if (x == 29 && GetAsyncKeyState(VK_RETURN)) {
+			StartTetris();
+		}
 	}
+}
+
+void StartNumberBaseball() {
+	system("cls");
+	gotoxy(8, 0);
+	printf("숫자야구");
+	gotoxy(0, 3);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■       게임시작       ■\n");
+	printf("■         상점         ■\n");
+	printf("■       게임설명       ■\n");
+	printf("■        홈으로        ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+}
+
+void StartNPuzzle() {
+	system("cls");
+	gotoxy(9, 0);
+	printf("n*n퍼즐");
+	gotoxy(0, 3);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■       게임시작       ■\n");
+	printf("■       게임설명       ■\n");
+	printf("■        홈으로        ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+}
+
+void StartTetris() {
+	system("cls");
+	gotoxy(8, 0);
+	printf("테트리스");
+	gotoxy(0, 3);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■       게임시작       ■\n");
+	printf("■       게임설명       ■\n");
+	printf("■        홈으로        ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■                      ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
 }
