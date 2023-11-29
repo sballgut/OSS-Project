@@ -240,7 +240,7 @@ int hardpuzzle() {
 		}
 	}
 
-	printf("게임 클리어!\n");
+	
 	return 0;
 }
 
@@ -261,10 +261,25 @@ int main()
 	cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 	printf("Elapsed CPU time: %.6f seconds\n", cpu_time_used);
 
-	if (cpu_time_used > 10)
-		printf("But game out gg");
-	
-	else if(cpu_time_used < 10) hardpuzzle();
+	int choose;
+
+	if (cpu_time_used > 30) {
+		printf("But game out(시간50초를 넘기셨습니다)\n");
+		printf("게임을 다시하겠습니까?\n");
+	    printf("1.YES    2.NO\n");
+		scanf_s("%d", &choose);
+		if (choose == 1) {
+			for (; cpu_time_used > 30;) {
+				easypuzzle();
+				
+			}
+		}
+
+	}
+	else if (cpu_time_used < 30) {
+		printf("게임 클리어!\n");
+		hardpuzzle();
+	}
 	
 
 	return 0;
