@@ -4,14 +4,18 @@
 #include <time.h>
 #include <Windows.h>
 
+// 함수 선언
 void generateRandomNumber(int* number, int digitCount);
 void getUserInput(int* guess, int digitCount);
 void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes, int* balls);
+void showShop(int* score); // 새로 추가된 함수
+void buyHint(int* targetNumber, int digitCount, int* score); // 새로 추가된 함수
 
 int main() {
     int difficulty;
     int strikes, balls;
     int maxAttempts = 7;
+    int score = 0; // 새로운 변수: 점수
 
     while (1) {
         printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
@@ -68,6 +72,16 @@ int main() {
 
         if (strikes == digitCount) {
             printf("축하합니다! 정답을 맞추셨습니다.\n");
+            // 정답을 맞춘 경우에 따라 점수를 부여
+            if (digitCount == 3) {
+                score += 5;
+            }
+            else if (digitCount == 4) {
+                score += 7;
+            }
+            else if (digitCount == 5) {
+                score += 10;
+            }
         }
         else {
             printf("게임 오버! 정답은 ");
@@ -110,7 +124,13 @@ int main() {
 
         // 게임 시작 메시지 다음에 빈 줄 출력
         system("cls");
+
+        // 상점에서 힌트를 구매할 수 있도록 추가
+        showShop(&score, &targetNumber, &digitCount);
     }
+
+    // 모든 게임이 종료되면 최종 점수 출력
+    printf("최종 점수: %d\n", score);
 
     return 0;
 }
@@ -177,5 +197,44 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
 
     for (int i = 0; i < 10; ++i) {
         *balls += (targetCount[i] < guessCount[i]) ? targetCount[i] : guessCount[i];
+    }
+}
+
+void showShop(int* score,int*targetNumber,int*digitCount) {
+    printf("===== 상점 =====\n");
+    printf("현재 보유 점수: %d\n", *score);
+    printf("1. 힌트 구매 (10점)\n");
+    printf("================\n");
+
+    int choice;
+    printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+    case 1:
+        buyHint(targetNumber, digitCount, score);
+        break;
+    case 0:
+        // 나가기
+        break;
+    default:
+        printf("잘못된 선택입니다. 다시 선택하세요.\n");
+        showShop(score, targetNumber, digitCount);
+        break;
+    }
+}
+
+void buyHint(int* targetNumber, int digitCount, int* score) {
+    if (*score >= 10) {
+        // 힌트 구매 가능한 경우
+        *score -= 10; // 점수 차감
+        int hint = 0;
+        for (int i = 0; i < digitCount; ++i) {
+            hint += targetNumber[i];
+        }
+        printf("힌트: 숫자의 합은 %d 입니다.\n", hint);
+    }
+    else {
+        printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
     }
 }
