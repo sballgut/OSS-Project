@@ -233,16 +233,40 @@ void buyHint(int* targetNumber, int digitCount, int* score) {
     if (*score >= 10) {
         // 힌트 구매 가능한 경우
         *score -= 10; // 점수 차감
-        int hint = 0;
+
+        int hintDigitCount = digitCount; // 힌트의 자릿수를 원래 숫자와 동일하게 설정
+
+        // 힌트를 생성할 배열 동적 할당
+        int* hint = malloc(hintDigitCount * sizeof(int));
+
+        // 힌트 배열에 세 자리 수의 합 저장
+        int sum = 0;
         for (int i = 0; i < digitCount; ++i) {
-            hint += targetNumber[i];
+            sum += targetNumber[i];
         }
-        printf("힌트: 숫자의 합은 %d 입니다.\n", hint);
+
+        // 합을 각 자리에 할당
+        for (int i = hintDigitCount - 1; i >= 0; --i) {
+            hint[i] = sum % 10;
+            sum /= 10;
+        }
+
+        // 힌트 출력
+        printf("힌트: ");
+        for (int i = 0; i < hintDigitCount; ++i) {
+            printf("%d", hint[i]);
+        }
+        printf("\n");
+
+        // 힌트 배열 메모리 해제
+        free(hint);
     }
     else {
         printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
     }
 }
+
+
 
 void showAchievement(int attempts) {
     if (attempts == 1) {
