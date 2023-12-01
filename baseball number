@@ -8,8 +8,9 @@
 void generateRandomNumber(int* number, int digitCount);
 void getUserInput(int* guess, int digitCount);
 void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes, int* balls);
-void showShop(int* score); // 새로 추가된 함수
-void buyHint(int* targetNumber, int digitCount, int* score); // 새로 추가된 함수
+void showShop(int* score, int* targetNumber, int* digitCount);
+void buyHint(int* targetNumber, int digitCount, int* score);
+void showAchievement(int attempts);
 
 int main() {
     int difficulty;
@@ -71,7 +72,11 @@ int main() {
         } while (strikes != digitCount && attempts < maxAttempts);
 
         if (strikes == digitCount) {
-            printf("축하합니다! 정답을 맞추셨습니다.\n");
+            printf("\n");
+
+            // 업적 표시
+            showAchievement(attempts);
+
             // 정답을 맞춘 경우에 따라 점수를 부여
             if (digitCount == 3) {
                 score += 5;
@@ -200,7 +205,7 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
     }
 }
 
-void showShop(int* score,int*targetNumber,int*digitCount) {
+void showShop(int* score, int* targetNumber, int* digitCount) {
     printf("===== 상점 =====\n");
     printf("현재 보유 점수: %d\n", *score);
     printf("1. 힌트 구매 (10점)\n");
@@ -212,7 +217,7 @@ void showShop(int* score,int*targetNumber,int*digitCount) {
 
     switch (choice) {
     case 1:
-        buyHint(targetNumber, digitCount, score);
+        buyHint(targetNumber, *digitCount, score);
         break;
     case 0:
         // 나가기
@@ -236,5 +241,29 @@ void buyHint(int* targetNumber, int digitCount, int* score) {
     }
     else {
         printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
+    }
+}
+
+void showAchievement(int attempts) {
+    if (attempts == 1) {
+        printf("Perfect! 1번만에 성공하셨습니다.\n");
+    }
+    else if (attempts == 2) {
+        printf("Fantastic! 2번만에 성공하셨습니다.\n");
+    }
+    else if (attempts == 3) {
+        printf("Amazing! 3번만에 성공하셨습니다.\n");
+    }
+    else if (attempts == 4) {
+        printf("Excellent! 4번만에 성공하셨습니다.\n");
+    }
+    else if (attempts == 5) {
+        printf("Well done! 5번만에 성공하셨습니다.\n");
+    }
+    else if (attempts == 6) {
+        printf("Good job! 6번만에 성공하셨습니다.\n");
+    }
+    else {
+        printf("Great! %d번 만에 성공하셨습니다.\n", attempts);
     }
 }
