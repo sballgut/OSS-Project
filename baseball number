@@ -59,13 +59,15 @@ int main() {
         generateRandomNumber(targetNumber, digitCount);
 
         printf("=== 숫자야구 게임 시작 (난이도: %d) ===\n", difficulty);
+        printf("\n");
 
         int attempts = 0;
         do {
             getUserInput(userGuess, digitCount);
             checkGuess(targetNumber, userGuess, digitCount, &strikes, &balls);
 
-            printf("스트라이크: %d, 볼: %d\n", strikes, balls);
+            printf("%d회차: 스트라이크: %d, 볼: %d\n", attempts + 1, strikes, balls);
+            printf("\n");
 
             attempts++;
 
