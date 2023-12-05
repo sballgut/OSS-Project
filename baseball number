@@ -11,13 +11,31 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
 void showShop(int* score, int* targetNumber, int* digitCount);
 void buyHint(int* targetNumber, int digitCount, int* score);
 void showAchievement(int attempts);
+void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts);
 
+int* userGuess;
+
+void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts) {
+    system("cls");  // 화면을 지우고
+
+    printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+    printf("■        Attempts: %-2d        ■\n", attempts);
+    printf("■                            ■\n");
+    printf("■        Strikes: %-2d         ■\n", strikes);
+    printf("■        Balls  : %-2d         ■\n", balls);
+    printf("■                            ■\n");
+    printf("■                            ■\n");
+    printf("■                            ■\n");
+    printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+
+    // 여기서 필요한 경우 targetNumber 등을 활용하여 게임 상태를 출력
+}
 int main() {
     int difficulty;
     int strikes, balls;
     int maxAttempts = 7;
     int score = 0; // 새로운 변수: 점수
-
+    
     while (1) {
         printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
         scanf("%d", &difficulty);
@@ -53,8 +71,10 @@ int main() {
     int* userGuess;
 
     while (1) {
+       
         targetNumber = malloc(digitCount * sizeof(int));
         userGuess = malloc(digitCount * sizeof(int));
+        
 
         generateRandomNumber(targetNumber, digitCount);
 
@@ -62,7 +82,13 @@ int main() {
         printf("\n");
 
         int attempts = 0;
+        int strikes = 0; // 초기화 추가
+        int balls = 0;
         do {
+            printGameUI(targetNumber, userGuess, digitCount, strikes, balls, attempts);
+
+
+
             getUserInput(userGuess, digitCount);
             checkGuess(targetNumber, userGuess, digitCount, &strikes, &balls);
 
@@ -113,6 +139,8 @@ int main() {
 
         // 다시 할 경우 난이도 선택
         while (1) {
+            strikes = 0;
+            balls = 0;
             printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
             scanf("%d", &difficulty);
 
