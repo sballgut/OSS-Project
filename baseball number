@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
+#define RANKING_FILE "ranking.txt"
+#define MAX_RANKING_ENTRIES 10
 
 // 함수 선언
 void generateRandomNumber(int* number, int digitCount);
@@ -13,7 +15,15 @@ void buyHint(int* targetNumber, int digitCount, int* score);
 void showAchievement(int attempts);
 void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts);
 
+
 int* userGuess;
+struct Player {
+    char name[50];
+    int score;
+};
+void updateRanking(struct Player player);
+// 랭킹 정보 출력 함수
+void displayRanking();
 
 void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts) {
     system("cls");  // 화면을 지우고
@@ -166,6 +176,13 @@ int main() {
 
     // 모든 게임이 종료되면 최종 점수 출력
     printf("최종 점수: %d\n", score);
+    struct Player currentPlayer;
+    printf("플레이어 이름을 입력하세요: ");
+    scanf("%s", currentPlayer.name);
+
+    currentPlayer.score = score;
+    updateRanking(currentPlayer);
+    displayRanking();
 
     return 0;
 }
@@ -247,7 +264,7 @@ void showShop(int* score, int* targetNumber, int* digitCount) {
 
     switch (choice) {
     case 1:
-        buyHint(targetNumber, *digitCount, score);
+        buyHint(targetNumber, *digitCount, score); 
         break;
     case 0:
         // 나가기
@@ -320,4 +337,34 @@ void showAchievement(int attempts) {
     else {
         printf("Great! %d번 만에 성공하셨습니다.\n", attempts);
     }
+}
+void updateRanking(struct Player player) {
+    FILE* file = fopen(RANKING_FILE, "a"); // 파일 열기 (추가 모드)
+    if (file == NULL) {
+        printf("랭킹 파일을 열 수 없습니다.\n");
+        return;
+    }
+
+    fprintf(file, "%s %d\n", player.name, player.score); // 파일에 플레이어 정보 추가
+    fclose(file); // 파일 닫기
+}
+
+void displayRanking() {
+    FILE* file = fopen(RANKING_FILE, "r"); // 파일 열기 (읽기 모드)
+    if (file == NULL) {
+        printf("랭킹 파일을 열 수 없습니다.\n");
+        return;
+    }
+
+    printf("\n===== 랭킹 =====\n");
+
+    // 파일에서 각 플레이어 정보를 읽어 출력
+    struct Player player;
+    while (fscanf(file, "%s %d", player.name, &player.score) == 2) {
+        printf("%s - %d점\n", player.name, player.score);
+    }
+
+    printf("================\n");
+
+    fclose(file); // 파일 닫기
 }
