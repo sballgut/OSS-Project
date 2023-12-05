@@ -18,25 +18,38 @@ int EgetDirectionKey() {
 
 void EprintPuzzle(int puzzle[][3]) {
 	system("cls");
+	printf("■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 3; r++) {
-		printf("\n\n");
 		for (int c = 0; c < 3; c++) {
+			printf("■");
 			if (puzzle[r][c]) {
 				// 각 숫자를 출력할 때 일정한 간격을 확보
 				if (puzzle[r][c] < 10) {
-					printf("   %d   ", puzzle[r][c]);
+					printf("   %d  ", puzzle[r][c]);
 				}
 				else {
-					printf("  %d   ", puzzle[r][c]);
+					printf("    %d   ", puzzle[r][c]);
 				}
 			}
 			else {
 				// 빈 칸은 공백 출력
-				printf("       ");
+				printf("      ");
 			}
 		}
-		printf("\n\n");
+		printf("■\n");
+		if (r < 2) {
+			for (int c = 0; c < 1; c++) {
+				printf("■■■■■■■■■■■■■");
+			}
+			printf("\n");
+		}
+		
 	}
+	printf("■■■■■■■■■■■■■\n\n");
+
+	printf("    ----------------\n");
+		printf("    |     3*3      |\n");
+		printf("    ----------------\n");
 }
 
 int EisEnding(int puzzle[][3]) {
@@ -190,26 +203,32 @@ int HgetDirectionKey() {
 
 void HprintPuzzle(int puzzle[][4]) {
 	system("cls");
+	printf("■■■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 4; r++) {
-		printf("\n\n");
 		for (int c = 0; c < 4; c++) {
-			if (puzzle[r][c]) {
+			printf("■");
+			if (puzzle[r][c]<10) {
 				// 각 숫자를 출력할 때 일정한 간격을 확보
-				if (puzzle[r][c] < 10) {
-					printf("     %d   ", puzzle[r][c]);
-				}
-				else {
-					printf("    %d   ", puzzle[r][c]);
-				}
+				printf("  %d  ", puzzle[r][c]);
 			}
-			else {
-				// 빈 칸은 공백 출력
-				printf("       ");
+			else if (puzzle[r][c] > 9) {
+				printf(" %d  ", puzzle[r][c]);
+			}else {
+				// 빈 칸은 공백으로 출력합니다.
+				printf("      ");
 			}
 		}
-		printf("\n\n\n");
+		printf("■\n");
+		// 세로선 출력
+		if (r < 3) {
+			printf("■■■■■■■■■■■■■■■\n");
+		}
+		else {
+			printf("■■■■■■■■■■■■■■■\n");
+		}
 	}
 }
+		
 
 
 int HisEnding(int puzzle[][4]) {
@@ -256,10 +275,10 @@ int hardpuzzle() {
 
 	int puzzle[4][4];
 	if (randomnumber == 1) {
-		    puzzle[0][0] = 14; puzzle[0][1] = 2; puzzle[0][2] = 13; puzzle[0][3] = 10;
-			puzzle[1][0] = 11; puzzle[1][1] = 1; puzzle[1][2] = 7; puzzle[1][3] = 5;
-			puzzle[2][0] = 12; puzzle[2][1] = 9; puzzle[2][2] = 15; puzzle[2][3] = 4;
-			puzzle[3][0] = 8; puzzle[3][1] = 6; puzzle[3][2] = 3; puzzle[3][3] = 0;
+		puzzle[0][0] = 14; puzzle[0][1] = 2; puzzle[0][2] = 13; puzzle[0][3] = 10;
+		puzzle[1][0] = 11; puzzle[1][1] = 1; puzzle[1][2] = 7; puzzle[1][3] = 5;
+		puzzle[2][0] = 12; puzzle[2][1] = 9; puzzle[2][2] = 15; puzzle[2][3] = 4;
+		puzzle[3][0] = 8; puzzle[3][1] = 6; puzzle[3][2] = 3; puzzle[3][3] = 0;
 	}
 	else if (randomnumber == 2) {
 		puzzle[0][0] = 1; puzzle[0][1] = 2; puzzle[0][2] = 10; puzzle[0][3] = 11;
