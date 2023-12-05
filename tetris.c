@@ -29,6 +29,10 @@ typedef struct _currentlocation {
     int Y;
 } Location;
 
+int speed(int *s) {
+    (*s)++;
+    return s;
+}
 
 //hide cursor
 void hidecursor() {
@@ -242,7 +246,7 @@ void copyBlock(int blockShape[4][4], int copy[4][4]) {
         }
     }
 }
-void setBlock(int blockShape[4][4]) {
+void setBlock(int blockShape[4][4], int *r) {
 
     int shape[7][4][4] = {
             {{0,1,0,0},{0,1,0,0},{0,1,0,0},{0,1,0,0}},
@@ -264,7 +268,7 @@ void setBlock(int blockShape[4][4]) {
 */
     srand((unsigned int)(time(NULL)));
 
-    switch (rand() % 7) {
+    switch (rand() % (*r)) {
     case 0:
         copyBlock(blockShape, shape[0]);
         break;
@@ -420,10 +424,12 @@ int fixShape(MData map[MAP_SIZE_H][MAP_SIZE_W], int blockShape[4][4], Location* 
     }
 }
 
-int goDown(MData map[MAP_SIZE_H][MAP_SIZE_W], int blockShape[4][4], Location* curLoc) {
+int goDown(MData map[MAP_SIZE_H][MAP_SIZE_W], int blockShape[4][4], Location* curLoc, int* s) {
     int bottomH = getShapeBottomLoc(blockShape);
     int bottomArr[4] = { 0 };
     int i;
+    int speed = s;
+    
     for (i = 0; i < 4; i++) {
         bottomArr[i] = getEachBottomLoc(blockShape, i);
     }
@@ -443,7 +449,7 @@ int goDown(MData map[MAP_SIZE_H][MAP_SIZE_W], int blockShape[4][4], Location* cu
 
     if (curLoc->Y + bottomH < MAP_SIZE_H) {
         removeShape(map, blockShape, curLoc);
-        Sleep(1000 / 8);
+        Sleep(1000 / (*s));
         (curLoc->Y)++;
     }
     return FALSE;
@@ -542,7 +548,7 @@ void organizeLine(MData map[MAP_SIZE_H][MAP_SIZE_W], int h) {
     }
 
 }
-void checkLine(MData map[MAP_SIZE_H][MAP_SIZE_W], Location curLoc, int* score) {
+void checkLine(MData map[MAP_SIZE_H][MAP_SIZE_W], Location curLoc, int* score, int* removeLine) {
     int h, w, full, count = 0;
 
     for (h = MAP_SIZE_H; h >= (curLoc.Y - 1); h--) {
@@ -558,6 +564,7 @@ void checkLine(MData map[MAP_SIZE_H][MAP_SIZE_W], Location curLoc, int* score) {
 
         if (full == MAP_SIZE_W) {
             (*score) += 5;
+            (*removeLine) += 1;
             deleteLine(map, h);
             organizeLine(map, h);
         }
@@ -600,6 +607,11 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
     int score = 0, bestScore = 0;
     int blockShape[4][4] = { 0 };
     int blockShapeSub[4][4] = { 0 };
+    int stage = 1;
+    int removeLine = 0;
+    int i = 0;
+    int s = 2;
+    int r = 7;
     Location curLoc = { 2,2 };
     FILE* rfp;
     if ((rfp = fopen("score.txt", "r")) == NULL) {
@@ -619,6 +631,8 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
     startTime();
     setBlock(blockShapeSub);
     drawSubShape(map, blockShapeSub);
+    gotoxy(5, 0);
+    printf("stage %d", stage);
     while (1) {
 
         if (reachBottom == TRUE) {
@@ -632,6 +646,36 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
             drawSubShape(map, blockShapeSub);
             reachBottom = FALSE;
         }
+
+        if (removeLine >= 3) {
+            //블록 수 조정
+            if (r >= 10) {
+                r = 10;
+            }
+            //블록 낙하속도 조정
+            if (s >= 8) {
+                s = 8;
+            }
+
+            stage++;
+
+            if (stage % 3 == 0 && r < 10) {
+                r++;
+            }
+
+            if (s < 8) {
+                s++;
+            }
+
+            gotoxy(5, 0);
+            printf("          ");
+            Sleep(1000);
+            gotoxy(5, 0);
+            printf("stage %d", stage);
+            mapInit(map);
+            drawMap(map);
+            removeLine = 0;
+        }        
 
         drawSubMap(bestScore, score);
         drawShape(map, blockShape, curLoc);
