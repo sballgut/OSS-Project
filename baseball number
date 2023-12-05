@@ -252,21 +252,24 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
     }
 }
 
+// showShop 함수
 void showShop(int* score, int* targetNumber, int* digitCount) {
     printf("===== 상점 =====\n");
     printf("현재 보유 점수: %d\n", *score);
     printf("1. 힌트 구매 (10점)\n");
     printf("================\n");
 
-    int choice;
+    char choice;
     printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
-    scanf("%d", &choice);
+    scanf(" %c", &choice);
 
     switch (choice) {
-    case 1:
-        buyHint(targetNumber, *digitCount, score); 
+    case '1':
+    case 'h':
+    case 'H':
+        buyHint(targetNumber, *digitCount, score);
         break;
-    case 0:
+    case '0':
         // 나가기
         break;
     default:
@@ -276,6 +279,7 @@ void showShop(int* score, int* targetNumber, int* digitCount) {
     }
 }
 
+// buyHint 함수
 void buyHint(int* targetNumber, int digitCount, int* score) {
     if (*score >= 10) {
         // 힌트 구매 가능한 경우
