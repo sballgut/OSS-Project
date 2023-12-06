@@ -104,40 +104,54 @@ void SelectGame() {
 	gotoxy(x, 6);
 	printf(">");
 	while (1) {
-		if (x <= 5 && GetAsyncKeyState(VK_LEFT)) {
-			gotoxy(5, 6);
-			printf(" ");
-			gotoxy(5, 6);
-			printf(">");
+		if (game == 1 && GetAsyncKeyState(VK_RIGHT)) {
+			game = 2;
+			gotoxy(6, 6);
+			textcolor(7);
+			printf("숫자야구");
+			gotoxy(19, 6);
+			textcolor(6);
+			printf("n*n퍼즐");
 		}
-		else if (GetAsyncKeyState(VK_LEFT)) {
-			gotoxy(x, 6);
-			printf(" ");
-			x -= 12;
-			gotoxy(x, 6);
-			printf(">");
+
+		if (game == 2 && GetAsyncKeyState(VK_LEFT)) {
+			game = 1;
+			gotoxy(19, 6);
+			textcolor(7);
+			printf("n*n퍼즐");
+			gotoxy(6, 6);
+			textcolor(4);
+			printf("숫자야구");
 		}
-		if (x >= 29 && GetAsyncKeyState(VK_RIGHT)) {
-			gotoxy(29, 6);
-			printf(" ");
-			gotoxy(29, 6);
-			printf(">");
+
+		if (game == 2 && GetAsyncKeyState(VK_RIGHT)) {
+			game = 3;
+			gotoxy(19, 6);
+			textcolor(7);
+			printf("n*n퍼즐");
+			gotoxy(31, 6);
+			textcolor(1);
+			printf("테트리스");
 		}
-		else if (GetAsyncKeyState(VK_RIGHT)) {
-			gotoxy(x, 6);
-			printf(" ");
-			x += 12;
-			gotoxy(x, 6);
-			printf(">");
+
+		if (game == 3 && GetAsyncKeyState(VK_LEFT)) {
+			game = 2;
+			gotoxy(31, 6);
+			textcolor(7);
+			printf("테트리스");
+			gotoxy(19, 6);
+			textcolor(6);
+			printf("n*n퍼즐");
 		}
-		Sleep(200);
-		if (x == 5 && GetAsyncKeyState(VK_RETURN)) {
+
+		Sleep(500);
+		if (game == 1 && GetAsyncKeyState(VK_RETURN)) {
 			StartNumberBaseball();
 		}
-		else if (x == 17 && GetAsyncKeyState(VK_RETURN)) {
+		else if (game == 2 && GetAsyncKeyState(VK_RETURN)) {
 			StartNPuzzle();
 		}
-		else if (x == 29 && GetAsyncKeyState(VK_RETURN)) {
+		else if (game == 3 && GetAsyncKeyState(VK_RETURN)) {
 			StartTetris();
 		}
 	}
