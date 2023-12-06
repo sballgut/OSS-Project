@@ -110,8 +110,7 @@ int main() {
             getUserInput(userGuess, digitCount);
             checkGuess(targetNumber, userGuess, digitCount, &strikes, &balls);
 
-            printf("%d회차: 스트라이크: %d, 볼: %d\n", attempts + 1, strikes, balls);
-            printf("\n");
+          
 
             attempts++;
 
@@ -135,11 +134,12 @@ int main() {
             }
         }
         else {
+            printf("\n");
             printf("게임 오버! 정답은 ");
             for (int i = 0; i < digitCount; ++i) {
                 printf("%d", targetNumber[i]);
             }
-            printf("입니다.\n");
+            printf("입니다.\n\n");
         }
 
         // 게임이 끝난 후 메모리 해제
@@ -260,7 +260,8 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
     }
 }
 
-// showShop 함수
+
+// showShop 함수 수정
 void showShop(int* score, int* targetNumber, int* digitCount) {
     printf("===== 상점 =====\n");
     printf("현재 보유 점수: %d\n", *score);
@@ -275,7 +276,7 @@ void showShop(int* score, int* targetNumber, int* digitCount) {
     case '1':
     case 'h':
     case 'H':
-        buyHint(targetNumber, *digitCount, score);
+        buyHint(digitCount, score,targetNumber);
         break;
     case '0':
         // 나가기
@@ -286,6 +287,7 @@ void showShop(int* score, int* targetNumber, int* digitCount) {
         break;
     }
 }
+
 
 // buyHint 함수
 void buyHint(int* targetNumber, int digitCount, int* score) {
@@ -322,6 +324,7 @@ void buyHint(int* targetNumber, int digitCount, int* score) {
     }
     else {
         printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
+        Sleep(1000);
     }
 }
 
