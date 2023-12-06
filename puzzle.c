@@ -9,6 +9,33 @@
 #include <time.h>
 #include <stdio.h>
 
+
+
+void printfui() {
+	printf("                                                              *****\n");
+	printf("      ***      *    ********       *        *****      **             **\n");
+	printf("    *     *    *    *             * *       *     *              **        ***\n");
+	printf("   *           *    ********     *   *      *****           **    ***       **\n");
+	printf("    *     *    *    *           *******     *    *      **       *      ***    ***\n");
+	printf("      ***      *    ********   *       *    *     *                        ****   ***\n");
+	printf("                                                              **   ****  *****    *  *\n");
+	printf("                                                          ***     **      ***  *      *\n");
+	printf("                                                     *                      * **********\n");
+	printf("                                                                              *         *\n");
+	printf("                                                                                **********\n");
+	printf("                                                                                  *      *\n");
+	printf("                                                                                     * *\n");
+	printf("                                                                                ");
+
+}
+
+
+
+
+
+
+
+
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -371,8 +398,8 @@ int main()
 	int choose;
 
 	if (cpu_time_used > 30) {
-		printf("      But game out(시간30초를 넘기셨습니다)\n");
-		printf("            게임을 다시하겠습니까?\n");
+		printf("      But game out(30초를 넘기셨습니다)\n");
+		printf("            게임을 다시하겠습니까?\n\n");
 		printf("              1.YES    2.NO\n");
 		scanf_s("%d", &choose);
 		if (choose == 1) {
@@ -391,8 +418,10 @@ int main()
 
 	}
 	else if (cpu_time_used < 30) {
-		gotoxy(10, 20);
-		printf("게임 클리어!\n");
+		gotoxy(100, 15);
+		printf("\n");
+		printfui();
+		
 #ifdef _WIN32
 		Sleep(9000); // Windows
 		system("cls");
