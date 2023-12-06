@@ -1,12 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
+#include <windows.h>
 #define LEFT      75
 #define RIGHT   77
 #define UP        72
 #define DOWN  80
 #include <time.h>
 
+void gotoxy(int x, int y);
+
+void gotoxy(int x, int y) {
+	COORD pos = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
 
 int EgetDirectionKey() {
 	int key = _getch();
@@ -17,7 +24,9 @@ int EgetDirectionKey() {
 }
 
 void EprintPuzzle(int puzzle[][3]) {
+	
 	system("cls");
+	printf("\n\n");
 	printf("■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 3; r++) {
 		for (int c = 0; c < 3; c++) {
@@ -43,13 +52,16 @@ void EprintPuzzle(int puzzle[][3]) {
 			}
 			printf("\n");
 		}
-		
+
 	}
 	printf("■■■■■■■■■■■■■\n\n");
 
-	printf("    ----------------\n");
-		printf("    |     3*3      |\n");
-		printf("    ----------------\n");
+	gotoxy(28, 4);
+	printf("    ■■■■■\n");
+	gotoxy(28, 5);
+	printf("    ■ 3*3  ■\n");
+	gotoxy(28, 6);
+	printf("    ■■■■■\n");
 }
 
 int EisEnding(int puzzle[][3]) {
@@ -203,19 +215,21 @@ int HgetDirectionKey() {
 
 void HprintPuzzle(int puzzle[][4]) {
 	system("cls");
+	printf("\n\n");
 	printf("■■■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 4; r++) {
 		for (int c = 0; c < 4; c++) {
 			printf("■");
-			if (puzzle[r][c]<10) {
+			if (puzzle[r][c] < 10 && puzzle[r][c] > 0) {
 				// 각 숫자를 출력할 때 일정한 간격을 확보
 				printf("  %d  ", puzzle[r][c]);
 			}
-			else if (puzzle[r][c] > 9) {
+			else if (puzzle[r][c] > 9&& puzzle[r][c] < 16) {
 				printf(" %d  ", puzzle[r][c]);
-			}else {
+			}
+			else {
 				// 빈 칸은 공백으로 출력합니다.
-				printf("      ");
+				printf("     ");
 			}
 		}
 		printf("■\n");
@@ -227,8 +241,14 @@ void HprintPuzzle(int puzzle[][4]) {
 			printf("■■■■■■■■■■■■■■■\n");
 		}
 	}
+	gotoxy(35, 5);
+	printf("    ■■■■■\n");
+	gotoxy(35, 6);
+	printf("    ■ 4*4  ■\n");
+	gotoxy(35, 7);
+	printf("    ■■■■■\n");
 }
-		
+
 
 
 int HisEnding(int puzzle[][4]) {
@@ -319,7 +339,7 @@ int hardpuzzle() {
 
 	while (!HisEnding(puzzle)) {
 		HprintPuzzle(puzzle);
-		printf("\n\n\n");
+		printf("\n\n\n\n\n");
 		printf(">> 방향키 선택\n");
 		key = HgetDirectionKey();
 
