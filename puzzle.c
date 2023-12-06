@@ -7,7 +7,13 @@
 #define UP        72
 #define DOWN  80
 #include <time.h>
+#include <stdio.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 void gotoxy(int x, int y);
 
 void gotoxy(int x, int y) {
@@ -187,5 +193,217 @@ int easypuzzle() {
 	}
 
 	printf("게임 클리어!\n");
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define PUZZLE_SIZE 4
+
+int HgetDirectionKey() {
+	int key = _getch();
+	if (key == 224) {
+		return _getch();
+	}
+	return 0;
+}
+
+void HprintPuzzle(int puzzle[][4]) {
+	system("cls");
+	printf("\n\n");
+	printf("■■■■■■■■■■■■■■■\n");
+	for (int r = 0; r < 4; r++) {
+		for (int c = 0; c < 4; c++) {
+			printf("■");
+			if (puzzle[r][c] < 10 && puzzle[r][c] > 0) {
+				// 각 숫자를 출력할 때 일정한 간격을 확보
+				printf("  %d  ", puzzle[r][c]);
+			}
+			else if (puzzle[r][c] > 9&& puzzle[r][c] < 16) {
+				printf(" %d  ", puzzle[r][c]);
+			}
+			else {
+				// 빈 칸은 공백으로 출력합니다.
+				printf("     ");
+			}
+		}
+		printf("■\n");
+		// 세로선 출력
+		if (r < 3) {
+			printf("■■■■■■■■■■■■■■■\n");
+		}
+		else {
+			printf("■■■■■■■■■■■■■■■\n");
+		}
+	}
+	gotoxy(35, 5);
+	printf("    ■■■■■\n");
+	gotoxy(35, 6);
+	printf("    ■ 4*4  ■\n");
+	gotoxy(35, 7);
+	printf("    ■■■■■\n");
+}
+
+
+
+int HisEnding(int puzzle[][4]) {
+	int count = 1;
+	for (int r = 0; r < PUZZLE_SIZE; r++) {
+		for (int c = 0; c < PUZZLE_SIZE; c++) {
+			if (puzzle[r][c] != count) {
+				return 0;
+			}
+			count = (count == PUZZLE_SIZE * PUZZLE_SIZE - 1) ? 0 : count + 1;
+		}
+	}
+	return 1;
+}
+
+void HshufflePuzzle(int puzzle[][PUZZLE_SIZE]) {
+	srand(time(NULL));
+
+	int flatPuzzle[PUZZLE_SIZE * PUZZLE_SIZE];
+	for (int i = 0; i < PUZZLE_SIZE * PUZZLE_SIZE - 1; i++) {
+		flatPuzzle[i] = i + 1;
+	}
+	flatPuzzle[PUZZLE_SIZE * PUZZLE_SIZE - 1] = 0;  // 0은 빈 칸을 나타냄
+
+	for (int i = PUZZLE_SIZE * PUZZLE_SIZE - 1; i > 0; i--) {
+		int j = rand() % (i + 1);
+		int temp = flatPuzzle[i];
+		flatPuzzle[i] = flatPuzzle[j];
+		flatPuzzle[j] = temp;
+	}
+
+	for (int r = 0; r < PUZZLE_SIZE; r++) {
+		for (int c = 0; c < PUZZLE_SIZE; c++) {
+			puzzle[r][c] = flatPuzzle[r * PUZZLE_SIZE + c];
+		}
+	}
+}
+
+int hardpuzzle() {
+	int puzzle[PUZZLE_SIZE][PUZZLE_SIZE];
+	HshufflePuzzle(puzzle);
+
+	int row, col;
+	for (int r = 0; r < PUZZLE_SIZE; r++) {
+		for (int c = 0; c < PUZZLE_SIZE; c++) {
+			if (puzzle[r][c] == 0) {
+				row = r;
+				col = c;
+			}
+		}
+	}
+
+	int key = 0;
+
+	while (!HisEnding(puzzle)) {
+		HprintPuzzle(puzzle);
+		printf("\n\n\n\n\n");
+		printf(">> 방향키 선택\n");
+		key = HgetDirectionKey();
+
+		switch (key) {
+		case RIGHT:
+			if (col > 0) {
+				puzzle[row][col] = puzzle[row][col - 1];
+				puzzle[row][col - 1] = 0;
+				col--;
+			}
+			break;
+		case LEFT:
+			if (col < PUZZLE_SIZE - 1) {
+				puzzle[row][col] = puzzle[row][col + 1];
+				puzzle[row][col + 1] = 0;
+				col++;
+			}
+			break;
+		case UP:
+			if (row < PUZZLE_SIZE - 1) {
+				puzzle[row][col] = puzzle[row + 1][col];
+				puzzle[row + 1][col] = 0;
+				row++;
+			}
+			break;
+		case DOWN:
+			if (row > 0) {
+				puzzle[row][col] = puzzle[row - 1][col];
+				puzzle[row - 1][col] = 0;
+				row--;
+			}
+			break;
+		}
+	}
+
+
+	return 0;
+}
+
+
+int main()
+{
+	clock_t start_time, end_time;
+	double cpu_time_used;
+
+	start_time = clock();  // 시작 시간 기록
+
+	// 실행 시간을 측정하고자 하는 작업
+	easypuzzle();
+
+	end_time = clock();  // 끝 시간 기록
+
+	// 실행 시간 계산 (초 단위)
+	cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+	printf("Elapsed CPU time: %.6f seconds\n", cpu_time_used);
+
+	int choose;
+
+	if (cpu_time_used > 30) {
+		printf("      But game out(시간30초를 넘기셨습니다)\n");
+		printf("            게임을 다시하겠습니까?\n");
+		printf("              1.YES    2.NO\n");
+		scanf_s("%d", &choose);
+		if (choose == 1) {
+			for (; cpu_time_used > 30;) {
+				start_time = clock();  // 시작 시간 기록
+
+				// 실행 시간을 측정하고자 하는 작업
+				easypuzzle();
+
+				end_time = clock();  // 끝 시간 기록
+				cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+				
+			}
+			hardpuzzle();
+		}
+
+	}
+	else if (cpu_time_used < 30) {
+		gotoxy(10, 20);
+		printf("게임 클리어!\n");
+#ifdef _WIN32
+		Sleep(9000); // Windows
+		system("cls");
+#else
+
+
+#endif
+
+		hardpuzzle();
+	}
+
+
 	return 0;
 }
