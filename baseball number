@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
+#include <string.h>
 #define RANKING_FILE "ranking.txt"
 #define MAX_RANKING_ENTRIES 10
 
@@ -24,6 +25,9 @@ struct Player {
 void updateRanking(struct Player player);
 // 랭킹 정보 출력 함수
 void displayRanking();
+int comparePlayers(const void* a, const void* b) {
+    return ((struct Player*)b)->score - ((struct Player*)a)->score;
+}
 
 void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts) {
     system("cls");  // 화면을 지우고
@@ -39,7 +43,11 @@ void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes,
     printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
 
     // 여기서 필요한 경우 targetNumber 등을 활용하여 게임 상태를 출력
+
 }
+
+    // 여기서 필요한 경우 targetNumber 등을 활용하여 게임 상태를 출력
+
 int main() {
     int difficulty;
     int strikes, balls;
@@ -343,7 +351,7 @@ void showAchievement(int attempts) {
     }
 }
 void updateRanking(struct Player player) {
-    FILE* file = fopen(RANKING_FILE, "a"); // 파일 열기 (추가 모드)
+    FILE* file = fopen(RANKING_FILE, "a");
     if (file == NULL) {
         printf("랭킹 파일을 열 수 없습니다.\n");
         return;
@@ -360,15 +368,28 @@ void displayRanking() {
         return;
     }
 
+    // 플레이어 항목을 배열로 읽어들임
+    struct Player players[MAX_RANKING_ENTRIES];
+    int numPlayers = 0;
+
+    while (fscanf(file, "%s %d", players[numPlayers].name, &players[numPlayers].score) == 2) {
+        numPlayers++;
+        if (numPlayers >= MAX_RANKING_ENTRIES) {
+            break;  // 배열 크기를 초과하지 않도록 함
+        }
+    }
+
+    fclose(file); // 파일 닫기
+
+    // 플레이어를 점수에 따라 내림차순으로 정렬
+    qsort(players, numPlayers, sizeof(struct Player), comparePlayers);
+
     printf("\n===== 랭킹 =====\n");
 
-    // 파일에서 각 플레이어 정보를 읽어 출력
-    struct Player player;
-    while (fscanf(file, "%s %d", player.name, &player.score) == 2) {
-        printf("%s - %d점\n", player.name, player.score);
+    // 정렬된 플레이어를 출력
+    for (int i = 0; i < numPlayers; i++) {
+        printf("%s - %d점\n", players[i].name, players[i].score);
     }
 
     printf("================\n");
-
-    fclose(file); // 파일 닫기
 }
