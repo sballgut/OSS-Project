@@ -5,6 +5,7 @@
 #define UP 72
 #define LEFT 75
 #define RIGHT 77
+#define DOWN 80
 
 void gotoxy(int x, int y);
 void SetConsole();
@@ -14,12 +15,21 @@ void SelectGame();
 void StartNumberBaseball();
 void StartNPuzzle();
 void StartTetris();
+void main_ui();
 
 int main() {
+	main_ui();
+	return 0;
+}
+
+//게임 시작 화면 메인ui
+void main_ui() {
 	int keyInput = getKeyDown();
-	int state = 0;
+	int state = 1;
+	system("cls");
 	SetConsole();
 	gotoxy(8, 0);
+	textcolor(7);
 	printf("추억의 미니게임");
 	gotoxy(0, 3);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
@@ -30,32 +40,43 @@ int main() {
 	printf("■                            ■\n");
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
 	
+	
 	while (1) {
-		if (GetAsyncKeyState(VK_LEFT)) {
-			state = 1;
-			gotoxy(15, 6);
-			printf(" ");
-			gotoxy(3, 6);
-			printf(">");
+		if (state == 1) {
+			gotoxy(5, 6);
+			textcolor(4);
+			printf("게임시작");
 		}
-		else if (GetAsyncKeyState(VK_RIGHT)) {
+	
+		if (state == 1 && GetAsyncKeyState(VK_RIGHT)) {
 			state = 2;
-			gotoxy(3, 6);
-			printf(" ");
-			gotoxy(15, 6);
-			printf(">");
+			gotoxy(5, 6);
+			textcolor(7);
+			printf("게임시작");
 		}
-		else if (GetAsyncKeyState(VK_RETURN)) {
-			if (state == 1) {
-				SelectGame();
-			}
-			else if (state == 2) {
-				gotoxy(0, 20);
-				break;
-			}
+	
+		if (state == 2) {
+			gotoxy(17, 6);
+			textcolor(1);
+			printf("게임종료");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_LEFT)) {
+			state = 1;
+			gotoxy(17, 6);
+			textcolor(7);
+			printf("게임종료");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_UP)) {
+			SelectGame();
+			break;
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_UP)) {
+			break;
 		}
 	}
-	return 0;
 }
 
 void gotoxy(int x, int y)
@@ -86,11 +107,12 @@ int getKeyDown() {
 	else return -1;
 }
 
+//게임선택화면 메인ui
 void SelectGame() {
-	int x;
-	x = 5;
+	int game = 1;
 	system("cls");
 	system("mode con: cols=70 lines=30");
+	Sleep(200);
 	gotoxy(18, 1);
 	printf("게임 선택");
 	gotoxy(0, 3);
@@ -101,9 +123,11 @@ void SelectGame() {
 	printf("■                                          ■\n");
 	printf("■                                          ■\n");
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
-	gotoxy(x, 6);
-	printf(">");
+	gotoxy(6, 6);
+	textcolor(4);
+	printf("숫자야구");
 	while (1) {
+		Sleep(100);
 		if (game == 1 && GetAsyncKeyState(VK_RIGHT)) {
 			game = 2;
 			gotoxy(6, 6);
@@ -113,7 +137,7 @@ void SelectGame() {
 			textcolor(6);
 			printf("n*n퍼즐");
 		}
-
+	
 		if (game == 2 && GetAsyncKeyState(VK_LEFT)) {
 			game = 1;
 			gotoxy(19, 6);
@@ -123,7 +147,7 @@ void SelectGame() {
 			textcolor(4);
 			printf("숫자야구");
 		}
-
+	
 		if (game == 2 && GetAsyncKeyState(VK_RIGHT)) {
 			game = 3;
 			gotoxy(19, 6);
@@ -133,7 +157,7 @@ void SelectGame() {
 			textcolor(1);
 			printf("테트리스");
 		}
-
+	
 		if (game == 3 && GetAsyncKeyState(VK_LEFT)) {
 			game = 2;
 			gotoxy(31, 6);
@@ -143,89 +167,273 @@ void SelectGame() {
 			textcolor(6);
 			printf("n*n퍼즐");
 		}
-
-		Sleep(500);
-		if (game == 1 && GetAsyncKeyState(VK_RETURN)) {
+	
+		if (game == 1 && GetAsyncKeyState(VK_UP)) {
 			StartNumberBaseball();
 		}
-		else if (game == 2 && GetAsyncKeyState(VK_RETURN)) {
+		else if (game == 2 && GetAsyncKeyState(VK_UP)) {
 			StartNPuzzle();
 		}
-		else if (game == 3 && GetAsyncKeyState(VK_RETURN)) {
+		else if (game == 3 && GetAsyncKeyState(VK_UP)) {
 			StartTetris();
 		}
 	}
 }
 
+//숫자야구 메인 ui
 void StartNumberBaseball() {
 	system("cls");
-	gotoxy(8, 0);
+	Sleep(200);
+	int state = 1;
+	gotoxy(20, 0);
+	textcolor(7);
 	printf("숫자야구");
 	gotoxy(0, 3);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■       게임시작       ■\n");
-	printf("■         상점         ■\n");
-	printf("■       게임설명       ■\n");
-	printf("■        홈으로        ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■    게임시작       게임설명       홈으로      ■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	while (1) {
+		Sleep(100);
+		if (state == 1) {
+			gotoxy(5, 6);
+			textcolor(4);
+			printf("게임시작");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 2;
+			gotoxy(5, 6);
+			textcolor(7);
+			printf("게임시작");
+		}
+	
+		if (state == 2) {
+			gotoxy(20, 6);
+			textcolor(6);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_LEFT)) {
+			state = 1;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 3;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 3) {
+			gotoxy(35, 6);
+			textcolor(1);
+			printf("홈으로");
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_LEFT)) {
+			state = 2;
+			gotoxy(35, 6);
+			textcolor(7);
+			printf("홈으로");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			NumBaseball();
+			break;
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			explainNumberBaseball();
+			break;
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			main_ui();
+			break;
+		}
+	
+		Sleep(100);
+	}
 }
 
+//n*n퍼즐 메인ui
 void StartNPuzzle() {
 	system("cls");
-	gotoxy(9, 0);
+	Sleep(200);
+	int state = 1;
+	gotoxy(20, 0);
+	textcolor(7);
 	printf("n*n퍼즐");
 	gotoxy(0, 3);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■       게임시작       ■\n");
-	printf("■       게임설명       ■\n");
-	printf("■        홈으로        ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■    게임시작       게임설명       홈으로      ■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	while (1) {
+		Sleep(100);
+		if (state == 1) {
+			gotoxy(5, 6);
+			textcolor(4);
+			printf("게임시작");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 2;
+			gotoxy(5, 6);
+			textcolor(7);
+			printf("게임시작");
+		}
+	
+		if (state == 2) {
+			gotoxy(20, 6);
+			textcolor(6);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_LEFT)) {
+			state = 1;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 3;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 3) {
+			gotoxy(35, 6);
+			textcolor(1);
+			printf("홈으로");
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_LEFT)) {
+			state = 2;
+			gotoxy(35, 6);
+			textcolor(7);
+			printf("홈으로");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			NPuzzle();
+			break;
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			explainNPuzzle();
+			break;
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			main_ui();
+			break;
+		}
+	
+		Sleep(100);
+	}
 }
 
+//테트리스 메인ui
 void StartTetris() {
 	system("cls");
-	gotoxy(8, 0);
+	Sleep(200);
+	int state = 1;
+	gotoxy(20, 0);
+	textcolor(7);
 	printf("테트리스");
 	gotoxy(0, 3);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■       게임시작       ■\n");
-	printf("■       게임설명       ■\n");
-	printf("■        홈으로        ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■                      ■\n");
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■    게임시작       게임설명       홈으로      ■\n");
+	printf("■                                              ■\n");
+	printf("■                                              ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	while (1) {
+		Sleep(100);
+		if (state == 1) {
+			gotoxy(5, 6);
+			textcolor(4);
+			printf("게임시작");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 2;
+			gotoxy(5, 6);
+			textcolor(7);
+			printf("게임시작");
+		}
+	
+		if (state == 2) {
+			gotoxy(20, 6);
+			textcolor(6);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_LEFT)) {
+			state = 1;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_RIGHT)) {
+			state = 3;
+			gotoxy(20, 6);
+			textcolor(7);
+			printf("게임설명");
+		}
+	
+		if (state == 3) {
+			gotoxy(35, 6);
+			textcolor(1);
+			printf("홈으로");
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_LEFT)) {
+			state = 2;
+			gotoxy(35, 6);
+			textcolor(7);
+			printf("홈으로");
+		}
+	
+		if (state == 1 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			NumBaseball();
+			break;
+		}
+	
+		if (state == 2 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			explainNumberBaseball();
+			break;
+		}
+	
+		if (state == 3 && GetAsyncKeyState(VK_UP)) {
+			gotoxy(0, 0);
+			main_ui();
+			break;
+		}
+	
+		Sleep(100);
+	}
 }
