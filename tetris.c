@@ -563,7 +563,7 @@ void organizeLine(MData map[MAP_SIZE_H][MAP_SIZE_W], int h) {
 void checkLine(MData map[MAP_SIZE_H][MAP_SIZE_W], Location curLoc, int* score, int* removeLine) {
     int h, w, full, count = 0;
 
-    for (h = MAP_SIZE_H; h >= (curLoc.Y - 1); h--) {
+    for (h = MAP_SIZE_H - 1; h >= (curLoc.Y - 1); h--) {
         full = 0;
         for (w = 0; w < MAP_SIZE_W; w++) {
             if (map[h][w] == EMPTY) {
@@ -639,9 +639,9 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
     drawMap(map);
 
     locationInit(&curLoc);
-    setBlock(blockShape);
+    setBlock(blockShape, &r);
     startTime();
-    setBlock(blockShapeSub);
+    setBlock(blockShapeSub, &r);
     drawSubShape(map, blockShapeSub);
     gotoxy(5, 0);
     printf("stage %d", stage);
@@ -671,7 +671,7 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
 
             stage++;
 
-            if (stage % 3 == 0 && r < 10) {
+            if (stage % 5 == 0 && r < 10) {
                 r++;
             }
 
