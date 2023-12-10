@@ -650,11 +650,11 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
         if (reachBottom == TRUE) {
             if (GameOver(map, score, bestScore)) return EXIT;
 
-            checkLine(map, curLoc, &score);
-            checkLine(map, curLoc, &score);
+            checkLine(map, curLoc, &score, &removeLine);
+            checkLine(map, curLoc, &score, &removeLine);
             locationInit(&curLoc);
             copyBlock(blockShape, blockShapeSub);
-            setBlock(blockShapeSub);
+            setBlock(blockShapeSub, &r);
             drawSubShape(map, blockShapeSub);
             reachBottom = FALSE;
         }
@@ -692,7 +692,7 @@ int GameStart(MData map[MAP_SIZE_H][MAP_SIZE_W]) {
         drawSubMap(bestScore, score);
         drawShape(map, blockShape, curLoc);
         drawMap(map);
-        reachBottom = goDown(map, blockShape, &curLoc);
+        reachBottom = goDown(map, blockShape, &curLoc, &s);
         if (reachBottom == TRUE) continue;
 
         key = getKeyDown();
