@@ -11,6 +11,7 @@
 
 
 
+
 void printfui() {
 	printf("                                                              *****\n");
 	printf("      ***      *    ********       *        *****      **             **\n");
@@ -30,12 +31,6 @@ void printfui() {
 }
 
 
-
-
-
-
-
-
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -48,17 +43,90 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-int EgetDirectionKey() {
+
+
+
+
+void drawArrow(char direction) {
+	int x = 15;
+	int y = 13;
+
+	switch (direction) {
+	case UP:
+		gotoxy(x, y);
+		printf("  ^  ");
+		gotoxy(x, y + 1);
+		printf(" ^^^ ");
+		gotoxy(x, y + 2);
+		printf("^^^^^");
+		break;
+	case DOWN:
+		gotoxy(x, y);
+		printf("vvvvv");
+		gotoxy(x, y + 1);
+		printf(" vvv ");
+		gotoxy(x, y + 2);
+		printf("  v  ");
+		break;
+	case LEFT:
+		gotoxy(x, y);
+		printf("   < ");
+		gotoxy(x, y + 1);
+		printf(" << ");
+		gotoxy(x, y + 2);
+		printf("   < ");
+		break;
+	case RIGHT:
+		gotoxy(x, y);
+		printf(" >   ");
+		gotoxy(x, y + 1);
+		printf(" >> ");
+		gotoxy(x, y + 2);
+		printf(" >   ");
+		break;
+	default:
+		break;
+	}
+}
+
+void drawUI(char highlightedKey) {
+	drawArrow(highlightedKey);
+}
+
+
+int getDirectionKey() {
 	int key = _getch();
+	
 	if (key == 224) {
 		return _getch();
 	}
 	return 0;
 }
 
+
+
+int EgetDirectionKey() {
+	int key = _getch();
+	if (key == 224) {
+		return _getch();
+	}else if (key == 27) {  // 27은 ESC 키의 ASCII 코드입니다.
+		printf("게임을 종료합니다.\n");
+		exit(0);  // 게임 루프를 종료하고 프로그램을 종료합니다.
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
 void EprintPuzzle(int puzzle[][3]) {
-	
-	system("cls");
+
+
 	printf("\n\n");
 	printf("■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 3; r++) {
@@ -84,6 +152,7 @@ void EprintPuzzle(int puzzle[][3]) {
 				printf("■■■■■■■■■■■■■");
 			}
 			printf("\n");
+
 		}
 
 	}
@@ -95,6 +164,7 @@ void EprintPuzzle(int puzzle[][3]) {
 	printf("    ■ 3*3  ■\n");
 	gotoxy(28, 6);
 	printf("    ■■■■■\n");
+
 }
 
 int EisEnding(int puzzle[][3]) {
@@ -107,6 +177,7 @@ int EisEnding(int puzzle[][3]) {
 			count = (count == 8) ? 0 : count + 1;
 		}
 	}
+
 	return 1;
 }
 
@@ -178,11 +249,17 @@ int easypuzzle() {
 
 	int key = 0;
 
+	drawUI(0);
+
 	while (!EisEnding(puzzle)) {
 		EprintPuzzle(puzzle);
+
+
+
 		printf("\n\n\n\n");
-		printf(">> 방향키 선택\n");
+		printf(">> 방향키 선택(ESC종료버튼)\n");
 		key = EgetDirectionKey();
+		
 
 		switch (key) {
 		case RIGHT:
@@ -190,6 +267,7 @@ int easypuzzle() {
 				puzzle[row][col] = puzzle[row][col - 1];
 				puzzle[row][col - 1] = 0;
 				col--;
+
 			}
 			break;
 			// LEFT 방향 이동
@@ -198,6 +276,7 @@ int easypuzzle() {
 				puzzle[row][col] = puzzle[row][col + 1];
 				puzzle[row][col + 1] = 0;
 				col++;
+
 			}
 			break;
 			// UP 방향 이동
@@ -206,6 +285,7 @@ int easypuzzle() {
 				puzzle[row][col] = puzzle[row + 1][col];
 				puzzle[row + 1][col] = 0;
 				row++;
+
 			}
 			break;
 			// DOWN 방향 이동
@@ -214,19 +294,23 @@ int easypuzzle() {
 				puzzle[row][col] = puzzle[row - 1][col];
 				puzzle[row - 1][col] = 0;
 				row--;
+
 			}
 			break;
+
+			if (key == 27) {  // ESC 키를 확인하여 게임 종료
+				printf("게임을 종료합니다.\n");
+				exit(0);
+			}
+
 		}
+		
+		drawUI(key);
 	}
 
 	printf("게임 클리어!\n");
 	return 0;
 }
-
-
-
-
-
 
 
 
@@ -242,12 +326,14 @@ int HgetDirectionKey() {
 	int key = _getch();
 	if (key == 224) {
 		return _getch();
+	} else if (key == 27) {  // 27은 ESC 키의 ASCII 코드입니다.
+	printf("게임을 종료합니다.\n");
+	exit(0);  // 게임 루프를 종료하고 프로그램을 종료합니다.
 	}
 	return 0;
 }
 
 void HprintPuzzle(int puzzle[][4]) {
-	system("cls");
 	printf("\n\n");
 	printf("■■■■■■■■■■■■■■■\n");
 	for (int r = 0; r < 4; r++) {
@@ -257,7 +343,7 @@ void HprintPuzzle(int puzzle[][4]) {
 				// 각 숫자를 출력할 때 일정한 간격을 확보
 				printf("  %d  ", puzzle[r][c]);
 			}
-			else if (puzzle[r][c] > 9&& puzzle[r][c] < 16) {
+			else if (puzzle[r][c] > 9 && puzzle[r][c] < 16) {
 				printf(" %d  ", puzzle[r][c]);
 			}
 			else {
@@ -336,10 +422,12 @@ int hardpuzzle() {
 
 	int key = 0;
 
+	drawUI(0);
+
 	while (!HisEnding(puzzle)) {
 		HprintPuzzle(puzzle);
 		printf("\n\n\n\n\n");
-		printf(">> 방향키 선택\n");
+		printf(">> 방향키 선택(ESC 종료버튼)\n");
 		key = HgetDirectionKey();
 
 		switch (key) {
@@ -371,7 +459,16 @@ int hardpuzzle() {
 				row--;
 			}
 			break;
+
+			if (key == 27) {  // ESC 키를 확인하여 게임 종료
+				printf("게임을 종료합니다.\n");
+				exit(0);
+			}
+
 		}
+
+
+		drawUI(key);
 	}
 
 
@@ -388,7 +485,7 @@ int main()
 
 	// 실행 시간을 측정하고자 하는 작업
 	easypuzzle();
-
+	
 	end_time = clock();  // 끝 시간 기록
 
 	// 실행 시간 계산 (초 단위)
@@ -398,6 +495,7 @@ int main()
 	int choose;
 
 	if (cpu_time_used > 30) {
+		printf("\n\n\n\n\n\n\n\n\n\n");
 		printf("      But game out(30초를 넘기셨습니다)\n");
 		printf("            게임을 다시하겠습니까?\n\n");
 		printf("              1.YES    2.NO\n");
@@ -405,15 +503,17 @@ int main()
 		if (choose == 1) {
 			for (; cpu_time_used > 30;) {
 				start_time = clock();  // 시작 시간 기록
-
+				system("cls");
 				// 실행 시간을 측정하고자 하는 작업
 				easypuzzle();
 
 				end_time = clock();  // 끝 시간 기록
 				cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-				
+
 			}
+			
 			hardpuzzle();
+			
 		}
 
 	}
@@ -421,7 +521,7 @@ int main()
 		gotoxy(100, 15);
 		printf("\n");
 		printfui();
-		
+
 #ifdef _WIN32
 		Sleep(9000); // Windows
 		system("cls");
@@ -431,6 +531,7 @@ int main()
 #endif
 
 		hardpuzzle();
+		printfui();
 	}
 
 
