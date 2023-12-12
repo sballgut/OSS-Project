@@ -261,72 +261,86 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
 }
 
 
+void buyHint(int digitCount, int* score, int* userGuess) {
+	if (*score >= 10) {
+		// 힌트 구매 가능한 경우
+		*score -= 10; // 점수 차감
+
+		int hintDigitCount = digitCount; // 힌트의 자릿수를 원래 숫자와 동일하게 설정
+
+		// 힌트 배열에 다음 랜덤 숫자의 각 자릿수의 합 저장
+		int* nextRandomNumber = malloc(digitCount * sizeof(int));
+		generateRandomNumber(nextRandomNumber, digitCount);
+
+		int sum = 0;
+		for (int i = 0; i < digitCount; ++i) {
+			sum += nextRandomNumber[i];
+		}
+
+		// 힌트 배열 동적 할당 및 각 자리에 할당
+		int* hint = malloc(hintDigitCount * sizeof(int));
+		for (int i = hintDigitCount - 1; i >= 0; --i) {
+			hint[i] = sum % 10;
+			sum /= 10;
+		}
+
+		// 힌트 출력
+		printf("힌트: ");
+		for (int i = 0; i < hintDigitCount; ++i) {
+			printf("%d", hint[i]);
+		}
+		printf("\n");
+
+		// 동적 할당한 메모리 해제
+		free(nextRandomNumber);
+		free(hint);
+	}
+	else {
+		printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
+		Sleep(1000);
+	}
+}
+
+
+
+
+
+
+
+
+
 // showShop 함수 수정
-void showShop(int* score, int* targetNumber, int* digitCount) {
-    printf("===== 상점 =====\n");
-    printf("현재 보유 점수: %d\n", *score);
-    printf("1. 힌트 구매 (10점)\n");
-    printf("================\n");
+void showShop(int* score, int digitCount, int* targetNumber) {
+	printf("===== 상점 =====\n");
+	printf("현재 보유 점수: %d\n", *score);
+	printf("1. 힌트 구매 (10점)\n");
+	printf("================\n");
 
-    char choice;
-    printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
-    scanf(" %c", &choice);
+	char choice;
+	printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
 
-    switch (choice) {
-    case '1':
-    case 'h':
-    case 'H':
-        buyHint(digitCount, score,targetNumber);
-        break;
-    case '0':
-        // 나가기
-        break;
-    default:
-        printf("잘못된 선택입니다. 다시 선택하세요.\n");
-        showShop(score, targetNumber, digitCount);
-        break;
-    }
+	// 입력 버퍼 비우기
+	while (getchar() != '\n');
+
+	scanf("%c", &choice);
+
+	switch (choice) {
+	case '1':
+	case 'h':
+	case 'H':
+		buyHint(digitCount, score, targetNumber);
+		Sleep(1000);
+		break;
+	case '0':
+		// 나가기
+		break;
+	default:
+		printf("잘못된 선택입니다. 다시 선택하세요.\n");
+		showShop(score, digitCount, targetNumber);
+		break;
+	}
 }
 
-
-// buyHint 함수
-void buyHint(int* targetNumber, int digitCount, int* score) {
-    if (*score >= 10) {
-        // 힌트 구매 가능한 경우
-        *score -= 10; // 점수 차감
-
-        int hintDigitCount = digitCount; // 힌트의 자릿수를 원래 숫자와 동일하게 설정
-
-        // 힌트를 생성할 배열 동적 할당
-        int* hint = malloc(hintDigitCount * sizeof(int));
-
-        // 힌트 배열에 세 자리 수의 합 저장
-        int sum = 0;
-        for (int i = 0; i < digitCount; ++i) {
-            sum += targetNumber[i];
-        }
-
-        // 합을 각 자리에 할당
-        for (int i = hintDigitCount - 1; i >= 0; --i) {
-            hint[i] = sum % 10;
-            sum /= 10;
-        }
-
-        // 힌트 출력
-        printf("힌트: ");
-        for (int i = 0; i < hintDigitCount; ++i) {
-            printf("%d", hint[i]);
-        }
-        printf("\n");
-
-        // 힌트 배열 메모리 해제
-        free(hint);
-    }
-    else {
-        printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
-        Sleep(1000);
-    }
-}
 
 
 
