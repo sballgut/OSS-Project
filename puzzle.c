@@ -426,7 +426,7 @@ int hardpuzzle() {
 
 	while (!HisEnding(puzzle)) {
 		HprintPuzzle(puzzle);
-		printf("\n\n\n\n\n");
+		printf("\n\n\n\n");
 		printf(">> 방향키 선택(ESC 종료버튼)\n");
 		key = HgetDirectionKey();
 
