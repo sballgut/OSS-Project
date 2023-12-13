@@ -11,8 +11,8 @@
 void generateRandomNumber(int* number, int digitCount);
 void getUserInput(int* guess, int digitCount);
 void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes, int* balls);
-void showShop(int* score, int digitCount, int* targetNumber);
-void buyHint(int digitCount, int* score, int* targetNumber);
+void showShop(int* score, int digitCount);
+void buyHint(int digitCount, int* score);
 void showAchievement(int attempts);
 void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts);
 
@@ -46,14 +46,122 @@ void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes,
 
 }
 
-    // 여기서 필요한 경우 targetNumber 등을 활용하여 게임 상태를 출력
+// 여기서 필요한 경우 targetNumber 등을 활용하여 게임 상태를 출력
+
+void playGameWithHint(int* nextRandomNumber, int digitCount, int* score) {
+    // 게임 로직 등을 처리할 수 있습니다.
+    int strikes=0, balls=0;
+    int maxAttempts = 7;
+    int attempts = 0;
+    int difficulty;
+    int* userGuess;
+
+    userGuess = malloc(digitCount * sizeof(int));
+    do {
+        // printGameUI 및 다른 관련 로직 추가
+        printGameUI(nextRandomNumber, userGuess, digitCount, strikes, balls, attempts);
+
+        getUserInput(userGuess, digitCount);
+        checkGuess(nextRandomNumber, userGuess, digitCount, &strikes, &balls);
+
+        attempts++;
+
+    } while (strikes != digitCount && attempts < maxAttempts);
+
+    // 게임 종료 로직 등을 처리할 수 있습니다.
+    if (strikes == digitCount) {
+        printf("\n");
+
+        // 업적 표시
+        showAchievement(attempts);
+
+        // 정답을 맞춘 경우에 따라 점수를 부여
+        if (digitCount == 3) {
+            *score += 5;
+        }
+        else if (digitCount == 4) {
+            *score += 7;
+        }
+        else if (digitCount == 5) {
+            *score += 10;
+        }
+    }
+    else {
+        printf("\n");
+        printf("게임 오버! 정답은 ");
+        for (int i = 0; i < digitCount; ++i) {
+            printf("%d", nextRandomNumber[i]);
+        }
+        printf("입니다.\n\n");
+    }
+    // 게임이 끝난 후 메모리 해제
+    free(nextRandomNumber);
+    free(userGuess);
+
+    // 사용자에게 다시 플레이할 것인지 물어보기
+    char playAgain;
+    printf("다시 플레이하시겠습니까? (y/n): ");
+    scanf(" %c", &playAgain);
+
+    if (playAgain != 'y' && playAgain != 'Y') {
+
+        // 모든 게임이 종료되면 최종 점수 출력
+        printf("최종 점수: %d\n", score);
+        struct Player currentPlayer;
+        printf("플레이어 이름을 입력하세요: ");
+        scanf("%s", currentPlayer.name);
+
+        currentPlayer.score = score;
+        updateRanking(currentPlayer);
+        displayRanking();
+        Sleep(2000);
+
+        exit(0); // 게임 종료
+    }
+
+    // 다시 할 경우 난이도 선택
+    while (1) {
+        strikes = 0;
+        balls = 0;
+        printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
+        scanf("%d", &difficulty);
+
+        if (difficulty > 3) {
+            printf("올바른 난이도를 선택하세요.\n");
+            continue;
+        }
+        else if (difficulty > 0 && difficulty < 4) {
+            break;
+        }
+    }
+
+    switch (difficulty) {
+    case 1:
+        digitCount = 3;
+        break;
+    case 2:
+        digitCount = 4;
+        break;
+    case 3:
+        digitCount = 5;
+        break;
+    default:
+        return 1;
+    }
+
+    // 게임 시작 메시지 다음에 빈 줄 출력
+    system("cls");
+
+    // 상점에서 힌트를 구매할 수 있도록 추가
+    showShop(score, digitCount);
+}
 
 int main() {
     int difficulty;
     int strikes, balls;
     int maxAttempts = 7;
-    int score = 0; // 새로운 변수: 점수
-    
+    int score = 30; // 새로운 변수: 점수
+
     while (1) {
         printf("난이도를 선택하세요 (1: 3자리, 2: 4자리, 3: 5자리): ");
         scanf("%d", &difficulty);
@@ -89,10 +197,10 @@ int main() {
     int* userGuess;
 
     while (1) {
-       
+
         targetNumber = malloc(digitCount * sizeof(int));
         userGuess = malloc(digitCount * sizeof(int));
-        
+
 
         generateRandomNumber(targetNumber, digitCount);
 
@@ -110,7 +218,7 @@ int main() {
             getUserInput(userGuess, digitCount);
             checkGuess(targetNumber, userGuess, digitCount, &strikes, &balls);
 
-          
+
 
             attempts++;
 
@@ -179,7 +287,7 @@ int main() {
         system("cls");
 
         // 상점에서 힌트를 구매할 수 있도록 추가
-        showShop(&score, digitCount, targetNumber);
+        showShop(&score, digitCount);
     }
 
     // 모든 게임이 종료되면 최종 점수 출력
@@ -261,84 +369,63 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
 }
 
 
-void buyHint(int digitCount, int* score, int* targetNumber) {
-	if (*score >= 10) {
-		// 힌트 구매 가능한 경우
-		*score -= 10; // 점수 차감
+void buyHint(int digitCount, int* score) {
+    if (*score >= 10) {
+        // 힌트 구매 가능한 경우
+        *score -= 10; // 점수 차감
 
-		int hintDigitCount = digitCount; // 힌트의 자릿수를 원래 숫자와 동일하게 설정
+        // 다음 랜덤 숫자 생성
+        int* nextRandomNumber = malloc(digitCount * sizeof(int));
+        generateRandomNumber(nextRandomNumber, digitCount);
 
-		// 힌트 배열에 다음 랜덤 숫자의 각 자릿수의 합 저장
-		int* nextRandomNumber = malloc(digitCount * sizeof(int));
-		generateRandomNumber(nextRandomNumber, digitCount);
+        int hint = 0;
+        for (int i = 0; i < digitCount; i++) {
+            hint += nextRandomNumber[i];
+        }
 
-		int sum = 0;
-		for (int i = 0; i < digitCount; ++i) {
-			sum += nextRandomNumber[i];
-		}
+        // 힌트 출력
+        printf("힌트: %d\n", hint);
+        Sleep(2000);
 
-		// 힌트 배열 동적 할당 및 각 자리에 할당
-		int* hint = malloc(hintDigitCount * sizeof(int));
-		for (int i = hintDigitCount - 1; i >= 0; --i) {
-			hint[i] = sum % 10;
-			sum /= 10;
-		}
-
-		// 힌트 출력
-		printf("힌트: ");
-		for (int i = 0; i < hintDigitCount; ++i) {
-			printf("%d", hint[i]);
-		}
-		printf("\n");
-
-		// 동적 할당한 메모리 해제
-		free(nextRandomNumber);
-		free(hint);
-	}
-	else {
-		printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
-		Sleep(1000);
-	}
+        // 새로운 함수를 호출하여 게임을 진행
+        playGameWithHint(nextRandomNumber, digitCount, score);
+    }
+    else {
+        printf("보유 점수가 부족하여 힌트를 구매할 수 없습니다.\n");
+        Sleep(1000);
+    }
 }
 
-
-
-
-
-
-
-
-
 // showShop 함수 수정
-void showShop(int* score, int digitCount, int* targetNumber) {
-	printf("===== 상점 =====\n");
-	printf("현재 보유 점수: %d\n", *score);
-	printf("1. 힌트 구매 (10점)\n");
-	printf("================\n");
+void showShop(int* score, int digitCount) {
+    printf("===== 상점 =====\n");
+    printf("현재 보유 점수: %d\n", *score);
+    printf("1. 힌트 구매 (10점)\n");
+    printf("================\n");
 
-	char choice;
-	printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
+    char choice;
+    printf("상점에서 무엇을 구매하시겠습니까? (0: 나가기): ");
 
-	// 입력 버퍼 비우기
-	while (getchar() != '\n');
+    // 입력 버퍼 비우기
+    while (getchar() != '\n');
 
-	scanf("%c", &choice);
+    scanf("%c", &choice);
 
-	switch (choice) {
-	case '1':
-	case 'h':
-	case 'H':
-		buyHint(digitCount, &score, targetNumber);
-		Sleep(1000);
-		break;
-	case '0':
-		// 나가기
-		break;
-	default:
-		printf("잘못된 선택입니다. 다시 선택하세요.\n");
-		showShop(score, digitCount, targetNumber);
-		break;
-	}
+    switch (choice) {
+    case '1':
+    case 'h':
+    case 'H':
+        buyHint(digitCount, score);
+        Sleep(1000);
+        break;
+    case '0':
+        // 나가기
+        break;
+    default:
+        printf("잘못된 선택입니다. 다시 선택하세요.\n");
+        showShop(&score, digitCount);
+        break;
+    }
 }
 
 
