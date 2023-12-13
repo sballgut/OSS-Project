@@ -11,8 +11,8 @@
 void generateRandomNumber(int* number, int digitCount);
 void getUserInput(int* guess, int digitCount);
 void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes, int* balls);
-void showShop(int* score, int* targetNumber, int* digitCount);
-void buyHint(int* targetNumber, int digitCount, int* score);
+void showShop(int* score, int digitCount, int* targetNumber);
+void buyHint(int digitCount, int* score, int* targetNumber);
 void showAchievement(int attempts);
 void printGameUI(int* targetNumber, int* userGuess, int digitCount, int strikes, int balls, int attempts);
 
@@ -179,7 +179,7 @@ int main() {
         system("cls");
 
         // 상점에서 힌트를 구매할 수 있도록 추가
-        showShop(&score, &targetNumber, &digitCount);
+        showShop(&score, digitCount, targetNumber);
     }
 
     // 모든 게임이 종료되면 최종 점수 출력
@@ -328,7 +328,7 @@ void showShop(int* score, int digitCount, int* targetNumber) {
 	case '1':
 	case 'h':
 	case 'H':
-		buyHint(digitCount, score, targetNumber);
+		buyHint(digitCount, &score, targetNumber);
 		Sleep(1000);
 		break;
 	case '0':
