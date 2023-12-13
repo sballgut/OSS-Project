@@ -261,7 +261,7 @@ void checkGuess(int* targetNumber, int* userGuess, int digitCount, int* strikes,
 }
 
 
-void buyHint(int digitCount, int* score, int* userGuess) {
+void buyHint(int digitCount, int* score, int* targetNumber) {
 	if (*score >= 10) {
 		// 힌트 구매 가능한 경우
 		*score -= 10; // 점수 차감
